@@ -19,7 +19,7 @@ rust-version = "1.65.0"
 [dependencies]
 ahash = "0.8.6"
 arrayvec = "0.7.2"
-atomic_refcell = "0.1.10" # part of public API
+atomic_refcell = "0.1.10"                                                    # part of public API
 rayon = { version = "1.5.0", optional = true }
 shred-derive = { path = "shred-derive", version = "0.7.0", optional = true }
 smallvec = "1.6.1"
@@ -35,6 +35,7 @@ shred-derive = { path = "shred-derive", version = "0.7.0" }
 [features]
 default = ["parallel", "shred-derive"]
 parallel = ["rayon"]
+web = []
 nightly = []
 
 [[example]]
@@ -72,4 +73,3 @@ name = "thread_local"
 [[example]]
 name = "batch_dispatching"
 required-features = ["parallel"]
-

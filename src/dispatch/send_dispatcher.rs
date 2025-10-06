@@ -60,12 +60,22 @@ impl SendDispatcher<'_> {
     ///
     /// Only available with "parallel" feature enabled.
     ///
+    /// With "web" feature enabled, the systems are dispatchted on the global threadpool.
+    ///
+    /// The global threadpool must be initialized using [wasm-bindgen-rayon](https://github.com/RReverser/wasm-bindgen-rayon).
+    ///
     /// Please note that this method assumes that no resource
     /// is currently borrowed. If that's the case, it panics.
     #[cfg(feature = "parallel")]
     pub fn dispatch_par(&mut self, world: &World) {
         let stages = &mut self.stages;
 
+        #[cfg(feature = "web")]
+        for stage in stages {
+            stage.execute(world);
+        }
+
+        #[cfg(not(feature = "web"))]
         self.thread_pool
             .read()
             .unwrap()

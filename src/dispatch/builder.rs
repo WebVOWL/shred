@@ -351,6 +351,10 @@ impl<'a, 'b> DispatcherBuilder<'a, 'b> {
     /// Attach a rayon thread pool to the builder
     /// and use that instead of creating one.
     ///
+    /// With "web" feature enabled, the systems are dispatchted on the global threadpool.
+    ///
+    /// The global threadpool must be initialized using [wasm-bindgen-rayon](https://github.com/RReverser/wasm-bindgen-rayon).
+    ///
     /// Same as
     /// [`add_pool()`](struct.DispatcherBuilder.html#method.add_pool),
     /// but returns `self` to enable method chaining.
@@ -363,6 +367,10 @@ impl<'a, 'b> DispatcherBuilder<'a, 'b> {
 
     /// Attach a rayon thread pool to the builder
     /// and use that instead of creating one.
+    ///
+    /// With "web" feature enabled, the systems are dispatchted on the global threadpool.
+    ///
+    /// The global threadpool must be initialized using [wasm-bindgen-rayon](https://github.com/RReverser/wasm-bindgen-rayon).
     #[cfg(feature = "parallel")]
     pub fn add_pool(&mut self, pool: ::std::sync::Arc<::rayon::ThreadPool>) {
         *self.thread_pool.write().unwrap() = Some(pool);
@@ -377,6 +385,10 @@ impl<'a, 'b> DispatcherBuilder<'a, 'b> {
 
     /// Builds the `Dispatcher`.
     ///
+    /// With "web" feature enabled, the systems are dispatchted on the global threadpool.
+    ///
+    /// The global threadpool must be initialized using [wasm-bindgen-rayon](https://github.com/RReverser/wasm-bindgen-rayon).
+    ///
     /// In the future, this method will
     /// precompute useful information in
     /// order to speed up dispatching.
@@ -384,6 +396,7 @@ impl<'a, 'b> DispatcherBuilder<'a, 'b> {
         use crate::dispatch::dispatcher::new_dispatcher;
 
         #[cfg(feature = "parallel")]
+        #[cfg(not(feature = "web"))]
         self.thread_pool
             .write()
             .unwrap()
